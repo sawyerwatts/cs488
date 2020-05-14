@@ -19,7 +19,7 @@ the Python package Pipenv to be installed. This project uses Python 3.6.
     $ pipenv shell
     (cs488) $ pipenv install
 
-## Denormalization process
+## Denormalization
 
 This process is controlled by `csv_to_json.py`, which reads the needed CSVs
 from `assets/` and generates `output.json`, which can then be imported into
