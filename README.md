@@ -3,7 +3,7 @@
 This is the repo for the term project in CS 488: Cloud and Cluster Data
 Management. This project involves denormalizing some relational data to be
 stored and used within a MongoDB instance that is running on a Google Cloud
-Platform.
+Platform, and then performing some tasks on that NoSQL database.
 
 ## Set Up
 
