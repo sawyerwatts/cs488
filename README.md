@@ -8,7 +8,7 @@ Platform, and then performing some tasks on that NoSQL database.
 ## Set Up
 
 After cloning this repo, untar `assets.tar.gz`, which contains a collection of
-CSVs this script will normalize to create the JSON file. Due to the simplicity
+CSVs `csv_to_json.p` will normalize to create the JSON file. Due to the simplicity
 of this program, the script will not catch a FileNotFoundError.
 
     $ tar -xzf assets.tar.gz
