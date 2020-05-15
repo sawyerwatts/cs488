@@ -55,7 +55,7 @@ is below, where an arrow indicates that the field is renamed in the document.
 
     freeway_station(locationtext) →  stationname
     freeway_stations(length)      →  stationlength
-    freeway_stations(downstream)  →  next
+    freeway_stations(downstream)  →  nextstationname
 
     highway(direction)
     highway(highwayname)
