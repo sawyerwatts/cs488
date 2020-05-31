@@ -26,7 +26,8 @@ from `assets/` and generates `output.json`, which can then be imported into
 MongoDB.  
 
 The general design for the MongoDB document is below. Please keep in mind that
-`datetimerecorded` is a poor name and `epoch` would be much better.
+`datetimerecorded` is a poor name and `epoch` would be much better as it stores
+the *milliseconds* since Epoch.
 
     {
         location =
