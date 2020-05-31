@@ -6,7 +6,7 @@ db = client.freewaydata
 collection = None
 
 if len(sys.argv) == 1:
-    pass
+    collection = db.allData
 else:
     collection = db.oneHour
 
