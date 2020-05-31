@@ -93,3 +93,8 @@ on September 22, 2011 for the I-205 NB freeway. Report travel time in minutes.
 6. Route Finding: Find a route from Johnson Creek to Columbia Blvd on I-205 NB
 using the upstream and downstream fields.
 
+These queries all use `query_setup.py`, which will determine which dataset to
+work with. If any arguments are supplied, `query_setup.py` will have the query
+script use the test dataset (one hour data from 2011 Sept 15). Otherwise, the
+full dataset is used.
+
