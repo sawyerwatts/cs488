@@ -1,9 +1,5 @@
-from pymongo import MongoClient
-from pprint import pprint
+from query_setup import collection
 
-client = MongoClient(port=27017)
-db = client.freewaydata
+over100 = collection.find({"recorded.speed" : {"$gt" : 100}}).count()
 
-over100 = db.oneHour.find({"recorded.speed" : {"$gte" : 100}}).count()
-
-pprint(over100)
+print("The number of documents with a speed over 100 is", over100)
