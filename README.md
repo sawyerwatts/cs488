@@ -14,7 +14,7 @@ of this program, the script will not catch a FileNotFoundError.
     $ tar -xzf assets.tar.gz
 
 Next, it is necessary to install the needed virtual environment. This requires
-the Python package Pipenv to be installed. This project uses Python 3.6.
+the Python package Pipenv to be installed. This project uses Python 3.5.
 
     $ pipenv shell
     (cs488) $ pipenv install
