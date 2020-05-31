@@ -18,6 +18,18 @@ the Python package Pipenv to be installed. This project uses Python 3.5.
 
     $ pipenv shell
     (cs488) $ pipenv install
+	
+Setup a Google Cloud Platform project and create a vm. SSH into the vm. 
+
+Install Mongo on the vm. These are the commands we used:
+
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+	echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+
+	sudo apt-get update
+
+	sudo apt-get install mongodb
 
 ## Denormalization
 
@@ -61,6 +73,29 @@ is below, where an arrow indicates that the field is renamed in the document.
 
     highway(direction)
     highway(highwayname)
+
+## Load Data into Database
+Start Mongo and create a database for the freeway data:
+
+	mongo
+	use freewaydata
+	quit()
+	
+Now that you have a database for your data, load it:
+
+	mongoimport --jsonArray --db freewaydata --collection allData --file output.json
+
+## Install Python MongoDB Driver
+
+If pip isn't installed:
+
+	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+	python3 get-pip.py
+	
+Install driver:
+
+	python -m pip install pymongo
+
 
 ## Queries
 
