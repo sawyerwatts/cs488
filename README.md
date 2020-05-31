@@ -36,7 +36,8 @@ This process is controlled by `csv_to_json.py`, which reads the needed CSVs
 from `assets/` and generates `output.json`, which can then be imported into
 MongoDB.  
 
-The general design for the MongoDB document is below.
+The general design for the MongoDB document is below. Please keep in mind that
+`datetimerecorded` is a poor name and `epoch` would be much better.
 
     {
         location =
