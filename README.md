@@ -74,7 +74,7 @@ is below, where an arrow indicates that the field is renamed in the document.
 
 ## Queries
 
-The various files that follow the syntax regex("query?\.py") are the various
+The various files that follow the syntax regex("query[1-6]\.py") are the various
 assigned queries for this project. These are described bellow.
 
 1. Count high speeds: Find the number of speeds > 100 in the data set.
