@@ -21,7 +21,7 @@ the Python package Pipenv to be installed. This project uses Python 3.6.
 
 ## `epoch_converter.py`
 
-This contains `convert_epoch().
+This contains `convert_epoch()`.
 
 ### `convert_epoch(seconds, type="datetime")`
 
