@@ -22,7 +22,7 @@ the version of Python3 on the Google Cloud Platform (GCP) MongoDB used.
 
 ### GCP Set Up
 
-To use the project on GCP as it was during development, setup a GCP project and
+To use the project on GCP as it was during development, set up a GCP project and
 create a virtual machine (VM). SSH into the VM. 
 
 Install Mongo on the VM. These are the commands we used:
