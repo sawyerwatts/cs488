@@ -33,7 +33,7 @@ Install Mongo on the vm. These are the commands we used:
 
 ## `epoch_converter.py`
 
-This contains `convert_epoch().
+This contains `convert_epoch()`.
 
 ### `convert_epoch(seconds, type="datetime")`
 
