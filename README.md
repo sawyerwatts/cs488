@@ -31,6 +31,17 @@ Install Mongo on the vm. These are the commands we used:
 
 	sudo apt-get install mongodb
 
+## `epoch_converter.py`
+
+This contains `convert_epoch().
+
+### `convert_epoch(seconds, type="datetime")`
+
+This will convert `seconds`, which is seconds since 1 Jan 1970, and convert it
+to the current time. The data type of the return value is set by `type`, which
+can be `"datetime"` or `"string"`, and will thrown an exception for any other
+value.
+
 ## Denormalization
 
 This process is controlled by `csv_to_json.py`, which reads the needed CSVs
