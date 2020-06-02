@@ -5,7 +5,7 @@ from epoch_converter import convert_epoch
 
 
 # Use to build an entry of a DataFrame with pandas.DataFrame.append().
-def make_row(datetimerecorded, stationname, speed, use_weekday=False):
+def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
     if use_weekday:
         weekday = datetimerecorded.weekday()
         if   weekday == 1: weekday = "Monday"
@@ -19,7 +19,7 @@ def make_row(datetimerecorded, stationname, speed, use_weekday=False):
         return {
             "weekday": datetimerecorded,
             "stationname": stationname,
-            "avgspeed": speed,
+            "frequency": frequency,
             "hour": datetimerecorded.hour
         }
 
@@ -27,7 +27,7 @@ def make_row(datetimerecorded, stationname, speed, use_weekday=False):
         return {
             "datetimerecorded": datetimerecorded,
             "stationname": stationname,
-            "speed": speed
+            "frequency": frequency
         }
 
 
@@ -46,8 +46,8 @@ for document in collection.find({"recorded.speed" : {"$gt" : 100}}):
 if i == 0: raise Exception("There is no data to work with; this will not run.")
 
 
-# Scrub the minutes and seconds off each record and average these into a single
-# value.
+# Scrub the minutes and seconds off each record and track the frequency of the
+# values combined.
 valid["datetimerecorded"] = valid["datetimerecorded"].apply(lambda date: date.replace(second=0))
 valid["datetimerecorded"] = valid["datetimerecorded"].apply(lambda date: date.replace(minute=0))
 
@@ -55,15 +55,7 @@ data = pandas.DataFrame()
 for datehour in valid["datetimerecorded"].unique():
     for station in valid["stationname"].unique():
         temp = valid[(valid["stationname"] == station) & (valid["datetimerecorded"] == datehour)]
-        total = 0
-        for index, row in temp.iterrows():
-            total += row["speed"]
-        avg = total / len(temp.index)
-        data = data.append(make_row(datehour, station, avg), ignore_index=True)
-
-print("Speed that is averaged by hour and station:") # TODO: delete
-print(data) # TODO: delete
-print() # TODO: delete
+        data = data.append(make_row(datehour, station, len(temp.index)), ignore_index=True)
 
 
 # Condense the timeframe into a single week.
@@ -72,20 +64,21 @@ for index, row in data.iterrows():
     key = (row["datetimerecorded"], row["stationname"])
     if key not in comps:
         comps[key] = {}
-        comps[key]["total"] = row["speed"]
-        comps[key]["count"] = 1
+        comps[key]["count"] = row["frequency"]
     else:
-        comps[key]["total"] += row["speed"]
-        comps[key]["count"] += 1
+        comps[key]["count"] += row["frequency"]
 
 final = pandas.DataFrame()
 for key in comps:
     datetimerecorded = key[0]
     stationname = key[1]
-    avg = comps[key]["total"] / comps[key]["count"]
-    final = final.append(make_row(datetimerecorded, stationname, avg, use_weekday=True), ignore_index=True)
+    freq = comps[key]["count"]
+    final = final.append(
+                make_row(datetimerecorded, stationname, freq, use_weekday=True),
+                ignore_index=True
+                )
 
-print("Speed that is averaged by hour, station, and weekday:")
+print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday:")
 print(final)
 
 # TODO: visualize
