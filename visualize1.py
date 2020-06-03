@@ -3,6 +3,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 final = pandas.read_csv("visualize1.csv")
+print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday:")
+print(final)
 
 weekdays = list(set(final["weekday"].tolist()))
 fig = make_subplots(rows=len(weekdays), cols=1, subplot_titles=weekdays)
@@ -41,4 +43,6 @@ fig.update_layout(
 
 
 fig.show()
+
+fig.to_html("vis1.html")
 

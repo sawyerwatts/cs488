@@ -13,13 +13,13 @@ from epoch_converter import convert_epoch
 def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
     if use_weekday:
         weekday = datetimerecorded.weekday()
-        if   weekday == 1: weekday = "Monday"
-        elif weekday == 2: weekday = "Tuesday"
-        elif weekday == 3: weekday = "Wednesday"
-        elif weekday == 4: weekday = "Thursday"
-        elif weekday == 5: weekday = "Friday"
-        elif weekday == 6: weekday = "Saturday"
-        elif weekday == 7: weekday = "Sunday"
+        if   weekday == 0: weekday = "Monday"
+        elif weekday == 1: weekday = "Tuesday"
+        elif weekday == 2: weekday = "Wednesday"
+        elif weekday == 3: weekday = "Thursday"
+        elif weekday == 4: weekday = "Friday"
+        elif weekday == 5: weekday = "Saturday"
+        elif weekday == 6: weekday = "Sunday"
 
         return {
             "weekday": weekday,
