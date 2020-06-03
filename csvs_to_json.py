@@ -113,7 +113,7 @@ def get_nextstationname(row):
     station_row = stations[stations["stationid"] == stationid]
 
     downstream_stationid = station_row["downstream"].iloc[0]
-    station_row = stations[stations["stationid"] == stationid]
+    station_row = stations[stations["stationid"] == downstream_stationid]
     return station_row["locationtext"].iloc[0]
 
 
