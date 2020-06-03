@@ -129,8 +129,15 @@ full dataset is used.
 
 ## Visualizations
 
-The various files that follow the syntax regex(visualize[1-6]\.py) are
+The various files that follow the syntax regex(pre_visualize[1-6]\.py) are
 visualization scripts that go into more detail about the corresponding query.
+
+The various file(s) that follow the syntax regex(pre_visualize[1-6]\.py) are
+used to generate a CSV that can be visualized by file(s) with syntax
+regex(visualize[1-6]\.py). The pregenerated files live in
+visualizations.tar.gz. There was the option to execute these scripts as a
+single script per query and output an HTML file, but it has issues actually
+running well in a browser.
 
 1. This visualization will take the entries with a speed greater than 100 MPH
 and plot the time by the station to display the frequency of this high speed,
