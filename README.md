@@ -132,9 +132,9 @@ full dataset is used.
 The various files that follow the syntax regex(visualize[1-6]\.py) are
 visualization scripts that go into more detail about the corresponding query.
 
-1. This visualization will take the entries with a speed greater than 100 MPH 
-and plot the weekday and time by the station to display the frequency of this
-high speed.
+1. This visualization will take the entries with a speed greater than 100 MPH
+and plot the time by the station to display the frequency of this high speed,
+scrubbed down to the hour. There will be a plot for each day.
 
 ## `epoch_converter.py`
 
