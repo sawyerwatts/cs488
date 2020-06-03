@@ -126,7 +126,7 @@ for i in range(len(weekdays)):
 fig.update_layout(
     title="Frequencies of speeding (over 100 MPH) per Hour by Station",
     showlegend=False,
-    #height=750*len(weekdays),
+    height=750*len(weekdays),
     font=dict(
         size=18
     )
