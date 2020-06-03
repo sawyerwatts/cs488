@@ -11,7 +11,6 @@ from epoch_converter import convert_epoch
 # Functions
 ###########
 
-"""
 # Use to build an entry of a DataFrame with pandas.DataFrame.append().
 def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
     if use_weekday:
@@ -90,12 +89,6 @@ for key in comps:
                 ignore_index=True
                 )
 
-# """
-
-final = pandas.read_csv("data1.csv") # TODO: when I uncomment the above block, I need to delete this line and read file.
-alt = final.copy(deep=True) # TODO: delete this line
-alt["weekday"] = "Thursday" # TODO: delete this line
-final = final.append(alt, ignore_index=True) # TODO: delete this line
 print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday:")
 print(final)
 
@@ -129,6 +122,7 @@ for i in range(len(weekdays)):
     )
     fig.update_xaxes(title_text="time (24-Hour)", range=[0, 23], row=row_counter, col=1)
 
+
 fig.update_layout(
     title="Frequencies of speeding (over 100 MPH) per Hour by Station",
     showlegend=False,
@@ -138,7 +132,8 @@ fig.update_layout(
     )
 )
 
+
 fig.show()
 
-# fig.write_html("./vis1.html")
+fig.write_html("./vis1.html")
 
