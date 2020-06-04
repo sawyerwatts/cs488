@@ -9,16 +9,17 @@ print(final)
 weekdays = list(set(final["weekday"].tolist()))
 fig = make_subplots(rows=len(weekdays), cols=1, subplot_titles=weekdays)
 for i in range(len(weekdays)):
+    subset = final[final["weekday"] == weekdays[i]]
     row_counter = i + 1
     fig.add_trace(
         go.Scatter(
             name=weekdays[i],
-            x = final["hour"],
-            y = final["stationname"],
+            x = subset["hour"],
+            y = subset["stationname"],
             mode="markers",
             marker=dict(
                 size=20,
-                color= final["frequency"],
+                color= subset["frequency"],
                 colorscale="Viridis",
                 showscale=True,
             )
