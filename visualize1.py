@@ -17,14 +17,10 @@ for i in range(len(weekdays)):
             y = final["stationname"],
             mode="markers",
             marker=dict(
-                size=15,
+                size=20,
                 color= final["frequency"],
                 colorscale="Viridis",
                 showscale=True,
-                line=dict(
-                        color="Black",
-                        width=2
-                )
             )
         ),
         row=row_counter, col=1
