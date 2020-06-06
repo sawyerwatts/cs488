@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 final = pandas.read_csv("visualize1.csv")
+final.sort_values(by="stationname", inplace=True)
 print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday:")
 print(final)
 
