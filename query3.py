@@ -39,13 +39,13 @@ def foster_nb_travel_time(start, end):
     # Calculate average speed         
     avg_speed = total_speed/num_speeds
     # Returns total travel time in seconds 	
-    return total_length/avg_speed*3600 
+    return (total_length/avg_speed)*3600 
        
 
 # Get total travel time in seconds for each 5 minute interval for 24 hours from station Foster NB
 def query3():
     hour = 0
-    # Start at 9/22/2011 at 12 am
+    # Set start and end to be  9/22/2011 at 12 am
     start = datetime(2011, 9, 22, 0, 0)
     end = datetime(2011, 9, 22, 0, 0)
     # Time constants
@@ -58,7 +58,7 @@ def query3():
         for minute in range(0, min_per_hour, 5):
             start = end
             # Move to next hour 
-            if(minute >= 55):
+            if(minute >= 60):
                 hour += 1
                 minute = 0
             end = datetime(2011, 9, 22, hour, minute) 
