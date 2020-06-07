@@ -4,7 +4,7 @@ from plotly.subplots import make_subplots
 
 final = pandas.read_csv("visualize1.csv")
 final.sort_values(by="stationname", inplace=True)
-print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday:")
+print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday")
 print(final)
 
 weekdays = list(set(final["weekday"].tolist()))
@@ -28,7 +28,7 @@ for i in range(len(weekdays)):
         ),
         row=row_counter, col=1
     )
-    fig.update_xaxes(title_text="time (24-Hour)", range=[0, 23], row=row_counter, col=1)
+    fig.update_xaxes(title_text="Instances per Hour (24-Hour)", range=[0, 23], row=row_counter, col=1)
 
 
 fig.update_layout(
