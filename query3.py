@@ -45,9 +45,6 @@ def foster_nb_travel_time(start, end):
 # Get total travel time in seconds for each 5 minute interval for 24 hours from station Foster NB
 def query3():
     hour = 0
-    # Set start and end to be  9/22/2011 at 12 am
-    start = datetime(2011, 9, 22, 0, 0)
-    end = datetime(2011, 9, 22, 0, 0)
     # Time constants
     min_per_hour = 60
     hours_per_day = 24
@@ -56,14 +53,26 @@ def query3():
     for hour in range(0, hours_per_day):
         # For each 5 minute interval
         for minute in range(0, min_per_hour, 5):
-            start = end
-            # Move to next hour 
+
+            start = datetime(2011, 9, 22, hour, minute); 
+            
+            # Edge cases at end of the hour
+            if(minute <= 50):
+                end = datetime(2011, 9, 22, hour, minute + 5);
+            if(minute == 55 and hour < hours_per_day - 1):
+                end = datetime(2011, 9, 22, hour + 1, 0)
+
+            # Move to next hour  
             if(minute >= 60):
                 hour += 1
                 minute = 0
-            end = datetime(2011, 9, 22, hour, minute) 
-            print(start)
+                end = datetime(2011, 9, 22, hour, minute) 
+
+            print("Start time: " + str(start))
+            print("End time: " + str(end))
             print("Travel time for this interval (in seconds): " + str(foster_nb_travel_time(start, end)))
+            # Increment start to next interval 
+            start = end
     
 
 
