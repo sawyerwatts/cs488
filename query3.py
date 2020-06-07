@@ -2,7 +2,9 @@ from datetime import datetime
 from query_setup import collection
 
 
-#Single-Day Station Travel Times: Find travel time for station Foster NB for 5-minute intervals for Sept 22, 2011. Report travel time in seconds.
+# Query3:
+# Single-Day Station Travel Times: Find travel time for station Foster NB for 5-minute 
+# intervals for Sept 22, 2011. Report travel time in seconds.
 
 print(collection)
 
@@ -21,12 +23,11 @@ def foster_nb_travel_time(start, end):
     }
 
     for document in collection.find(criteria):
-       # if length is None:
+        
         length = document["location"]["stationlength"]
         total_length += length
 
         speed = document["recorded"]["speed"]
-        #if speed is not None:
         total_speed += speed 	
 	
 	# Returns total travel time 	
@@ -43,13 +44,4 @@ start = datetime(2011, 9, 22, 0, 0)
 end = datetime(2011, 9, 22, 23, 59)
 
 print(foster_nb_travel_time(start, end))
-
-
-
-#for document in collection.find(criteria):
-#	print(document)
-	
-#collection.find()
-#print(station)
-#get_total_travel_time();
 
