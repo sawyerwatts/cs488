@@ -1,6 +1,7 @@
 import pandas
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import numpy as np
 
 final = pandas.read_csv("visualize1.csv")
 final.sort_values(by="stationname", inplace=True)
@@ -40,6 +41,29 @@ fig.update_layout(
     )
 )
 
+#sorts stations by position on highway
+conditions = [
+	(final["stationname"] == "Airportway WB to SB"),
+	(final["stationname"] == "Airportway EB to SB"),
+	(final["stationname"] == "Columbia to I-205 SB"),
+	(final["stationname"] == "Glisan to I-205 SB"),
+	(final["stationname"] == "Stark/Washington SB"),
+	(final["stationname"] == "Division SB"),
+	(final["stationname"] == "Powell Blvd SB"),
+	(final["stationname"] == "Foster SB"),
+	(final["stationname"] == "Johnson Creek SB"),
+	(final["stationname"] == "Sunnyside SB"),
+	(final["stationname"] == "Sunnyside NB"),
+	(final["stationname"] == "Johnson Cr NB"),
+	(final["stationname"] == "Foster NB"),
+	(final["stationname"] == "Powell to I-205 NB"),
+	(final["stationname"] == "Division NB"),
+	(final["stationname"] == "Glisan to I-205 NB"),
+	(final["stationname"] == "Columbia to I-205 NB")]
+choices = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+final["order"] = np.select(conditions, choices, default = 99)
+final.sort_values(by = ['order'])
+print(final)
 
 fig.show()
 
