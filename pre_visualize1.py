@@ -10,7 +10,7 @@ from epoch_converter import convert_epoch
 ###########
 
 # Use to build an entry of a DataFrame with pandas.DataFrame.append().
-def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
+def make_row(datetimerecorded, stationname, nextstationname, frequency, use_weekday=False):
     if use_weekday:
         weekday = datetimerecorded.weekday()
         if   weekday == 0: weekday = "Monday"
@@ -24,6 +24,7 @@ def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
         return {
             "weekday": weekday,
             "stationname": stationname,
+            "nextstationname": nextstationname,
             "frequency": frequency,
             "hour": datetimerecorded.hour
         }
@@ -32,6 +33,7 @@ def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
         return {
             "datetimerecorded": datetimerecorded,
             "stationname": stationname,
+            "nextstationname": nextstationname,
             "frequency": frequency
         }
 
@@ -48,9 +50,10 @@ for document in collection.find({"recorded.speed" : {"$gt" : 100}}):
     epoch = document["recorded"]["datetimerecorded"]
     datetimerecorded = convert_epoch(epoch / 1000, type="datetime")
     stationname = document["location"]["stationname"]
+    nextstationname = document["location"]["nextstationname"]
     speed = document["recorded"]["speed"]
     if speed is not None:
-        valid = valid.append(make_row(datetimerecorded, stationname, speed), ignore_index=True)
+        valid = valid.append(make_row(datetimerecorded, stationname, nextstationname, speed), ignore_index=True)
 
 if i == 0: raise Exception("There is no data to work with; this will not run.")
 
@@ -64,13 +67,15 @@ data = pandas.DataFrame()
 for datehour in valid["datetimerecorded"].unique():
     for station in valid["stationname"].unique():
         temp = valid[(valid["stationname"] == station) & (valid["datetimerecorded"] == datehour)]
-        data = data.append(make_row(datehour, station, len(temp.index)), ignore_index=True)
+        nextstationname = valid[valid["stationname"] == station]["nextstationname"].iloc[0]
+        data = data.append(make_row(datehour, station, nextstationname, len(temp.index)), ignore_index=True)
 
 
 # Condense the timeframe into a single week.
+# TODO: this is failing
 comps = {}
 for index, row in data.iterrows():
-    key = (row["datetimerecorded"], row["stationname"])
+    key = (row["datetimerecorded"], row["stationname"], row["nextstationname"])
     if key not in comps:
         comps[key] = {}
         comps[key]["count"] = row["frequency"]
@@ -81,9 +86,10 @@ final = pandas.DataFrame()
 for key in comps:
     datetimerecorded = key[0]
     stationname = key[1]
+    nextstationname = key[2]
     freq = comps[key]["count"]
     final = final.append(
-                make_row(datetimerecorded, stationname, freq, use_weekday=True),
+                make_row(datetimerecorded, stationname, nextstationname, freq, use_weekday=True),
                 ignore_index=True
                 )
 
