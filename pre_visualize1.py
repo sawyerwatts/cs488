@@ -70,17 +70,21 @@ for datehour in valid["datetimerecorded"].unique():
         nextstationname = valid[valid["stationname"] == station]["nextstationname"].iloc[0]
         data = data.append(make_row(datehour, station, nextstationname, len(temp.index)), ignore_index=True)
 
+print("data")
+print(data)
+print()
 
 # Condense the timeframe into a single week.
 # TODO: this is failing
 comps = {}
 for index, row in data.iterrows():
     key = (row["datetimerecorded"], row["stationname"], row["nextstationname"])
-    if key not in comps:
+    if key in comps:
+        print("non-new row:", row)
+        comps[key]["count"] += row["frequency"]
+    else:
         comps[key] = {}
         comps[key]["count"] = row["frequency"]
-    else:
-        comps[key]["count"] += row["frequency"]
 
 final = pandas.DataFrame()
 for key in comps:
