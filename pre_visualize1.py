@@ -19,6 +19,7 @@ def npdt_to_pydt(npdt):
 # Use to build an entry of a DataFrame with pandas.DataFrame.append().
 def make_row(datetimerecorded, stationname, nextstationname, frequency, hour=None, use_weekday=False, no_converting=False):
     if no_converting:
+        if hour is None: raise Exception("hour cannot be unsupplied if no_converting is supplied.")
         return {
             "weekday": datetimerecorded,
             "stationname": stationname,
