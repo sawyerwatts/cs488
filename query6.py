@@ -11,6 +11,7 @@ def findRoute(station):
 		for document in collection.find({"location.stationname": station}):
 			station = document["location"]["nextstationname"]
 			break
+		input()
 		return findRoute(station)
 
 startStation = "Johnson Cr NB"
