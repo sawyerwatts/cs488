@@ -17,6 +17,7 @@ for i in range(len(weekdays)):
             name=weekdays[i],
             x = subset["hour"],
             y = subset["stationname"],
+            hovertext = subset["frequency"],
             mode="markers",
             marker=dict(
                 size=20,
