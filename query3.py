@@ -70,7 +70,10 @@ def query3():
 
             print("Start time: " + str(start))
             print("End time: " + str(end))
+            print()
             print("Travel time for this interval (in seconds): " + str(foster_nb_travel_time(start, end)))
+            print()
+            print()
             # Increment start to next interval 
             start = end
     
