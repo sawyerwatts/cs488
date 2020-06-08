@@ -3,9 +3,17 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-final = pandas.read_csv("visualize1.csv")
-final.sort_values(by="stationname", inplace=True)
+from pre_visualize1 import make_row
 
+
+###############################################################################
+# Tweak and visualize.
+######################
+
+data = pandas.read_csv("visualize1.csv")
+data.sort_values(by="stationname", inplace=True)
+
+weekdays = list(set(data["weekday"].tolist()))
 stations = [
     "Airportway WB to SB",
     "Airportway EB to SB",
@@ -26,25 +34,41 @@ stations = [
     "Columbia to I-205 NB"]
 
 
+# Fill in any missing gaps from stations without any occurrences so the
+# visualization is full.
+for station in stations:
+    for weekday in weekdays:
+        for hour in range(0, 24):
+            temp = data[
+                    (data["stationname"] == station)
+                    & (data["weekday"] == weekday)
+                    & (data["hour"] == hour)
+                    ]
+            if len(temp.index) == 0:
+                data = data.append(
+                    make_row(weekday, station, 0, hour, no_converting=True),
+                    ignore_index=True
+                    )
+
+
 # Sorts stations by position on highway.
 conditions = []
 choices = []
 for station in stations:
-    conditions.append( final["stationname"] == station )
+    conditions.append( data["stationname"] == station )
     choices.append(len(choices))
 
-final["order"] = np.select(conditions, choices, default=99)
-final.sort_values(by="order", inplace=True)
+data["order"] = np.select(conditions, choices, default=99)
+data.sort_values(by="order", inplace=True)
 
 
-
+# Visualize.
 print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday")
-print(final)
+print(data)
 
-weekdays = list(set(final["weekday"].tolist()))
 fig = make_subplots(rows=len(weekdays), cols=1, subplot_titles=weekdays)
 for i in range(len(weekdays)):
-    subset = final[final["weekday"] == weekdays[i]]
+    subset = data[data["weekday"] == weekdays[i]]
     row_counter = i + 1
     fig.add_trace(
         go.Scatter(
