@@ -5,6 +5,42 @@ import numpy as np
 
 final = pandas.read_csv("visualize1.csv")
 final.sort_values(by="stationname", inplace=True)
+
+# Sorts stations by position on highway.
+stations = [
+    "Airportway WB to SB",
+    "Airportway EB to SB",
+    "Columbia to I-205 SB",
+    "Glisan to I-205 SB",
+    "Stark/Washington SB",
+    "Division SB",
+    "Powell Blvd SB",
+    "Foster SB",
+    "Johnson Creek SB",
+    "Sunnyside SB",
+    "Sunnyside NB",
+    "Johnson Cr NB",
+    "Foster NB",
+    "Powell to I-205 NB",
+    "Division NB",
+    "Glisan to I-205 NB",
+    "Columbia to I-205 NB"]
+# for each station
+#   for each hour
+#       if not present in final
+#           add it w/ freq = 0
+
+conditions = []
+choices = []
+for station in stations:
+    conditions.append( final["stationname"] == station )
+    choices.append(len(choices))
+
+final["order"] = np.select(conditions, choices, default=99)
+final.sort_values(by="order", inplace=True)
+
+
+
 print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday")
 print(final)
 
@@ -41,31 +77,6 @@ fig.update_layout(
     )
 )
 
-#sorts stations by position on highway
-conditions = [
-	(final["stationname"] == "Airportway WB to SB"),
-	(final["stationname"] == "Airportway EB to SB"),
-	(final["stationname"] == "Columbia to I-205 SB"),
-	(final["stationname"] == "Glisan to I-205 SB"),
-	(final["stationname"] == "Stark/Washington SB"),
-	(final["stationname"] == "Division SB"),
-	(final["stationname"] == "Powell Blvd SB"),
-	(final["stationname"] == "Foster SB"),
-	(final["stationname"] == "Johnson Creek SB"),
-	(final["stationname"] == "Sunnyside SB"),
-	(final["stationname"] == "Sunnyside NB"),
-	(final["stationname"] == "Johnson Cr NB"),
-	(final["stationname"] == "Foster NB"),
-	(final["stationname"] == "Powell to I-205 NB"),
-	(final["stationname"] == "Division NB"),
-	(final["stationname"] == "Glisan to I-205 NB"),
-	(final["stationname"] == "Columbia to I-205 NB")]
-choices = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-final["order"] = np.select(conditions, choices, default = 99)
-final.sort_values(by = ['order'])
-print(final)
-
 fig.show()
-
 fig.to_html("visualize1.html")
 
