@@ -1,5 +1,6 @@
 import datetime
 import pandas
+import numpy as np
 
 from query_setup import collection
 from epoch_converter import convert_epoch
@@ -9,9 +10,29 @@ from epoch_converter import convert_epoch
 # Functions
 ###########
 
+def npdt_to_pydt(npdt):
+    ts = (npdt - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, "s")
+    pydt = datetime.datetime.utcfromtimestamp(ts)
+    return pydt
+
+
 # Use to build an entry of a DataFrame with pandas.DataFrame.append().
-def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
-    if use_weekday:
+def make_row(datetimerecorded, stationname, nextstationname, frequency, hour=None, use_weekday=False, no_converting=False):
+    if no_converting:
+        if hour is None: raise Exception("hour cannot be unsupplied if no_converting is supplied.")
+        return {
+            "weekday": datetimerecorded,
+            "stationname": stationname,
+            "nextstationname": nextstationname,
+            "frequency": frequency,
+            "hour": hour
+        }
+
+    elif use_weekday:
+        if isinstance(datetimerecorded, np.datetime64):
+            datetimerecorded = npdt_to_pydt(datetimerecorded)
+
+        hour = datetimerecorded.hour
         weekday = datetimerecorded.weekday()
         if   weekday == 0: weekday = "Monday"
         elif weekday == 1: weekday = "Tuesday"
@@ -24,14 +45,16 @@ def make_row(datetimerecorded, stationname, frequency, use_weekday=False):
         return {
             "weekday": weekday,
             "stationname": stationname,
+            "nextstationname": nextstationname,
             "frequency": frequency,
-            "hour": datetimerecorded.hour
+            "hour": hour
         }
 
     else:
         return {
             "datetimerecorded": datetimerecorded,
             "stationname": stationname,
+            "nextstationname": nextstationname,
             "frequency": frequency
         }
 
@@ -48,9 +71,10 @@ for document in collection.find({"recorded.speed" : {"$gt" : 100}}):
     epoch = document["recorded"]["datetimerecorded"]
     datetimerecorded = convert_epoch(epoch / 1000, type="datetime")
     stationname = document["location"]["stationname"]
+    nextstationname = document["location"]["nextstationname"]
     speed = document["recorded"]["speed"]
     if speed is not None:
-        valid = valid.append(make_row(datetimerecorded, stationname, speed), ignore_index=True)
+        valid = valid.append(make_row(datetimerecorded, stationname, nextstationname, speed), ignore_index=True)
 
 if i == 0: raise Exception("There is no data to work with; this will not run.")
 
@@ -64,26 +88,29 @@ data = pandas.DataFrame()
 for datehour in valid["datetimerecorded"].unique():
     for station in valid["stationname"].unique():
         temp = valid[(valid["stationname"] == station) & (valid["datetimerecorded"] == datehour)]
-        data = data.append(make_row(datehour, station, len(temp.index)), ignore_index=True)
+        nextstationname = valid[valid["stationname"] == station]["nextstationname"].iloc[0]
+        data = data.append(make_row(datehour, station, nextstationname, len(temp.index), use_weekday=True), ignore_index=True)
 
 
 # Condense the timeframe into a single week.
 comps = {}
 for index, row in data.iterrows():
-    key = (row["datetimerecorded"], row["stationname"])
-    if key not in comps:
+    key = (row["weekday"], row["hour"], row["stationname"], row["nextstationname"])
+    if key in comps:
+        comps[key]["count"] += row["frequency"]
+    else:
         comps[key] = {}
         comps[key]["count"] = row["frequency"]
-    else:
-        comps[key]["count"] += row["frequency"]
 
 final = pandas.DataFrame()
 for key in comps:
-    datetimerecorded = key[0]
-    stationname = key[1]
+    weekday = key[0]
+    hour = key[1]
+    stationname = key[2]
+    nextstationname = key[3]
     freq = comps[key]["count"]
     final = final.append(
-                make_row(datetimerecorded, stationname, freq, use_weekday=True),
+                make_row(weekday, stationname, nextstationname, freq, hour, no_converting=True),
                 ignore_index=True
                 )
 

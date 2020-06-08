@@ -13,13 +13,6 @@ of this program, the script will not catch a FileNotFoundError.
 
     $ tar -xzf assets.tar.gz
 
-Next, it is necessary to install the needed virtual environment. This requires
-the Python package Pipenv to be installed. This project uses Python 3.5 as that is
-the version of Python3 on the Google Cloud Platform (GCP) MongoDB used.
-
-    $ pipenv shell
-    (cs488) $ pipenv install
-
 ### GCP Set Up
 
 To use the project on GCP as it was during development, set up a GCP project and
@@ -54,9 +47,17 @@ install it.
 	curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 	python3 get-pip.py
 	
-Next, you will need to install Pipenv.
+
+Next, it is necessary to install the needed virtual environment. This requires
+the Python package Pipenv to be installed. This project uses Python 3.5 as that is
+the version of Python3 on the Google Cloud Platform (GCP) MongoDB used.
 
 	python3 -m pip install pipenv
+
+Enter the following commands to install the Python MongoDB driver on your virtual environment:
+    	pipenv shell
+    	pipenv install
+
 
 ## Denormalization
 
