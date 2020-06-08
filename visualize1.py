@@ -79,8 +79,10 @@ for i in range(len(weekdays)):
             mode="markers",
             marker=dict(
                 size=20,
-                color= subset["frequency"],
-                colorscale="Viridis",
+                color=subset["frequency"],
+                cmin=0,
+                cmax=40,
+                colorscale="Rainbow",
                 showscale=True,
             )
         ),
