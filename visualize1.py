@@ -6,7 +6,6 @@ import numpy as np
 final = pandas.read_csv("visualize1.csv")
 final.sort_values(by="stationname", inplace=True)
 
-# Sorts stations by position on highway.
 stations = [
     "Airportway WB to SB",
     "Airportway EB to SB",
@@ -25,11 +24,9 @@ stations = [
     "Division NB",
     "Glisan to I-205 NB",
     "Columbia to I-205 NB"]
-# for each station
-#   for each hour
-#       if not present in final
-#           add it w/ freq = 0
 
+
+# Sorts stations by position on highway.
 conditions = []
 choices = []
 for station in stations:
