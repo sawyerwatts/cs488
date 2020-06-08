@@ -3,9 +3,66 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-final = pandas.read_csv("visualize1.csv")
-final.sort_values(by="stationname", inplace=True)
 
+###############################################################################
+# Functions.
+############
+
+def npdt_to_pydt(npdt):
+    ts = (npdt - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, "s")
+    pydt = datetime.datetime.utcfromtimestamp(ts)
+    return pydt
+
+
+# Use to build an entry of a DataFrame with pandas.DataFrame.append().
+def make_row(datetimerecorded, stationname, frequency, hour=None, use_weekday=False, no_converting=False):
+    if no_converting:
+        if hour is None: raise Exception("hour cannot be unsupplied if no_converting is supplied.")
+        return {
+            "weekday": datetimerecorded,
+            "stationname": stationname,
+            "frequency": frequency,
+            "hour": hour
+        }
+
+    elif use_weekday:
+        if isinstance(datetimerecorded, np.datetime64):
+            datetimerecorded = npdt_to_pydt(datetimerecorded)
+
+        hour = datetimerecorded.hour
+        weekday = datetimerecorded.weekday()
+        if   weekday == 0: weekday = "Monday"
+        elif weekday == 1: weekday = "Tuesday"
+        elif weekday == 2: weekday = "Wednesday"
+        elif weekday == 3: weekday = "Thursday"
+        elif weekday == 4: weekday = "Friday"
+        elif weekday == 5: weekday = "Saturday"
+        elif weekday == 6: weekday = "Sunday"
+
+        return {
+            "weekday": weekday,
+            "stationname": stationname,
+            "frequency": frequency,
+            "hour": hour
+        }
+
+    else:
+        return {
+            "datetimerecorded": datetimerecorded,
+            "stationname": stationname,
+            "frequency": frequency
+        }
+
+
+###############################################################################
+# Tweak and visualize.
+######################
+
+
+data = pandas.read_csv("visualize1.csv")
+data.sort_values(by="stationname", inplace=True)
+
+weekdays = list(set(data["weekday"].tolist()))
 stations = [
     "Airportway WB to SB",
     "Airportway EB to SB",
@@ -26,25 +83,41 @@ stations = [
     "Columbia to I-205 NB"]
 
 
+# Fill in any missing gaps from stations without any occurrences so the
+# visualization is full.
+for station in stations:
+    for weekday in weekdays:
+        for hour in range(0, 24):
+            temp = data[
+                    (data["stationname"] == station)
+                    & (data["weekday"] == weekday)
+                    & (data["hour"] == hour)
+                    ]
+            if len(temp.index) == 0:
+                data = data.append(
+                    make_row(weekday, station, 0, hour, no_converting=True),
+                    ignore_index=True
+                    )
+
+
 # Sorts stations by position on highway.
 conditions = []
 choices = []
 for station in stations:
-    conditions.append( final["stationname"] == station )
+    conditions.append( data["stationname"] == station )
     choices.append(len(choices))
 
-final["order"] = np.select(conditions, choices, default=99)
-final.sort_values(by="order", inplace=True)
+data["order"] = np.select(conditions, choices, default=99)
+data.sort_values(by="order", inplace=True)
 
 
-
+# Visualize.
 print("The frequency of an entry going faster than 100 MPH by hour, station, and weekday")
-print(final)
+print(data)
 
-weekdays = list(set(final["weekday"].tolist()))
 fig = make_subplots(rows=len(weekdays), cols=1, subplot_titles=weekdays)
 for i in range(len(weekdays)):
-    subset = final[final["weekday"] == weekdays[i]]
+    subset = data[data["weekday"] == weekdays[i]]
     row_counter = i + 1
     fig.add_trace(
         go.Scatter(
