@@ -3,61 +3,12 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-
-###############################################################################
-# Functions.
-############
-
-def npdt_to_pydt(npdt):
-    ts = (npdt - np.datetime64('1970-01-01T00:00:00Z')) / np.timedelta64(1, "s")
-    pydt = datetime.datetime.utcfromtimestamp(ts)
-    return pydt
-
-
-# Use to build an entry of a DataFrame with pandas.DataFrame.append().
-def make_row(datetimerecorded, stationname, frequency, hour=None, use_weekday=False, no_converting=False):
-    if no_converting:
-        if hour is None: raise Exception("hour cannot be unsupplied if no_converting is supplied.")
-        return {
-            "weekday": datetimerecorded,
-            "stationname": stationname,
-            "frequency": frequency,
-            "hour": hour
-        }
-
-    elif use_weekday:
-        if isinstance(datetimerecorded, np.datetime64):
-            datetimerecorded = npdt_to_pydt(datetimerecorded)
-
-        hour = datetimerecorded.hour
-        weekday = datetimerecorded.weekday()
-        if   weekday == 0: weekday = "Monday"
-        elif weekday == 1: weekday = "Tuesday"
-        elif weekday == 2: weekday = "Wednesday"
-        elif weekday == 3: weekday = "Thursday"
-        elif weekday == 4: weekday = "Friday"
-        elif weekday == 5: weekday = "Saturday"
-        elif weekday == 6: weekday = "Sunday"
-
-        return {
-            "weekday": weekday,
-            "stationname": stationname,
-            "frequency": frequency,
-            "hour": hour
-        }
-
-    else:
-        return {
-            "datetimerecorded": datetimerecorded,
-            "stationname": stationname,
-            "frequency": frequency
-        }
+from pre_visualize1 import make_row
 
 
 ###############################################################################
 # Tweak and visualize.
 ######################
-
 
 data = pandas.read_csv("visualize1.csv")
 data.sort_values(by="stationname", inplace=True)
